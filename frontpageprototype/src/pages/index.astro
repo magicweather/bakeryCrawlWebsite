@@ -55,7 +55,9 @@
 				height: 100vh;
 				background-color: rgba(0, 0, 0, 0.4);
 				z-index: 500;
+				transition: opacity 0.3s ease;
 			}
+
 
 			.title-overlay {
 				position: fixed;
@@ -131,6 +133,10 @@
 						updateInterval: 150 // Faster tile updates
 					}).addTo(map);
 					
+					// Create a high z-index pane for Hackney boundary
+					map.createPane('hackneyPane');
+					map.getPane('hackneyPane').style.zIndex = 1001;
+					
 					// Load and add Hackney boundary
 					window.hackneyLayer = null;
 					fetch('/hackney-boundary.json')
@@ -138,9 +144,11 @@
 						.then(data => {
 							console.log('Loading Hackney boundary with', data.geometry.coordinates[0].length, 'points');
 							window.hackneyLayer = L.geoJSON(data, {
+								pane: 'hackneyPane',
 								style: {
-									color: '#ff6b6b',
-									weight: 3,
+									color: '#98D8C8',
+									fillColor: '#98D8C8',
+									weight: 2,
 									opacity: 0,
 									fillOpacity: 0
 								}
@@ -156,7 +164,7 @@
 						if (isTransitioning) return; // Prevent overlapping transitions
 						
 						const scrollY = window.scrollY;
-						const maxScroll = document.body.scrollHeight - window.innerHeight;
+						const maxScroll = Math.max(1, document.body.scrollHeight - window.innerHeight);
 						const scrollProgress = Math.min(scrollY / maxScroll, 1);
 						
 						// Start: Central London coordinates: [51.5074, -0.1278], zoom 12
@@ -185,11 +193,20 @@
 						if (window.hackneyLayer) {
 							const borderOpacity = Math.max(0, scrollProgress - 0.3); // Start showing at 30% scroll
 							window.hackneyLayer.setStyle({
-								color: '#ff6b6b',
-								weight: 3,
-								opacity: borderOpacity,
-								fillOpacity: borderOpacity * 0.1 // Very subtle fill
+								color: '#98D8C8',
+								fillColor: '#98D8C8',
+								weight: 2,
+								opacity: borderOpacity * 0.8, // Subtle border
+								fillOpacity: borderOpacity * 0.4 // Solid pastel green fill
 							});
+						}
+						
+						// Fade out original overlay
+						const originalOverlay = document.querySelector('.map-overlay');
+						
+						if (originalOverlay) {
+							// Fade out original overlay as we scroll (disappears by 50% scroll)
+							originalOverlay.style.opacity = Math.max(0, 1 - (scrollProgress * 2));
 						}
 						
 						// Show "Hackney Edition" text
