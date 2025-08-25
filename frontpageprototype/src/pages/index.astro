@@ -69,6 +69,15 @@
 				text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
 				pointer-events: none;
 				text-align: center;
+				transition: all 0.3s ease;
+			}
+
+			.hackney-edition {
+				font-size: 48px;
+				margin-top: 10px;
+				opacity: 0;
+				transform: translateY(20px);
+				transition: all 0.5s ease;
 			}
 
 			.emojis {
@@ -87,6 +96,7 @@
 			<div class="map-overlay"></div>
 			<div class="title-overlay">
 				<div>Bakery Crawl</div>
+				<div class="hackney-edition">Hackney Edition</div>
 			</div>
 		</div>
 
@@ -121,6 +131,24 @@
 						updateInterval: 150 // Faster tile updates
 					}).addTo(map);
 					
+					// Load and add Hackney boundary
+					window.hackneyLayer = null;
+					fetch('/hackney-boundary.json')
+						.then(response => response.json())
+						.then(data => {
+							console.log('Loading Hackney boundary with', data.geometry.coordinates[0].length, 'points');
+							window.hackneyLayer = L.geoJSON(data, {
+								style: {
+									color: '#ff6b6b',
+									weight: 3,
+									opacity: 0,
+									fillOpacity: 0
+								}
+							}).addTo(map);
+							console.log('Hackney boundary layer created');
+						})
+						.catch(error => console.error('Could not load Hackney boundary:', error));
+					
 					// Scroll-based map transition
 					let isTransitioning = false;
 					
@@ -152,6 +180,29 @@
 							duration: 0.1, // Very short duration for smoothness
 							easeLinearity: 0.8 // More linear easing
 						});
+						
+						// Show Hackney boundary and text as we scroll towards it
+						if (window.hackneyLayer) {
+							const borderOpacity = Math.max(0, scrollProgress - 0.3); // Start showing at 30% scroll
+							window.hackneyLayer.setStyle({
+								color: '#ff6b6b',
+								weight: 3,
+								opacity: borderOpacity,
+								fillOpacity: borderOpacity * 0.1 // Very subtle fill
+							});
+						}
+						
+						// Show "Hackney Edition" text
+						const hackneyText = document.querySelector('.hackney-edition');
+						if (hackneyText) {
+							if (scrollProgress > 0.4) { // Show text at 40% scroll
+								hackneyText.style.opacity = Math.min(1, (scrollProgress - 0.4) * 2);
+								hackneyText.style.transform = `translateY(${Math.max(0, 20 - (scrollProgress - 0.4) * 40)}px)`;
+							} else {
+								hackneyText.style.opacity = 0;
+								hackneyText.style.transform = 'translateY(20px)';
+							}
+						}
 						
 						// Reset transition flag
 						setTimeout(() => {
