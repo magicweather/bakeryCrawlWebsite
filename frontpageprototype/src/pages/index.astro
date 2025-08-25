@@ -1,0 +1,177 @@
+---
+
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Bakery Crawl</title>
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				font-family: Arial, sans-serif;
+				height: 150vh;
+				position: relative;
+			}
+
+			.mobile {
+				background-color: #98D8C8;
+			}
+
+			.desktop {
+				background-color: black;
+				color: white;
+				text-align: center;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.desktop-message {
+				font-size: 24px;
+			}
+
+			#map {
+				height: 100vh;
+				width: 100%;
+				position: fixed;
+				top: 0;
+				left: 0;
+			}
+
+			.map-overlay {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100vh;
+				background-color: rgba(0, 0, 0, 0.4);
+				z-index: 500;
+			}
+
+			.title-overlay {
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				z-index: 1000;
+				color: white;
+				font-family: 'Sacramento', cursive;
+				font-size: 72px;
+				text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+				pointer-events: none;
+				text-align: center;
+			}
+
+			.emojis {
+				font-size: 32px;
+				margin-top: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="desktop-message" class="desktop-message" style="display: none;">
+			Please open the website on your mobile phone
+		</div>
+
+		<div id="mobile-content" style="display: none;">
+			<div id="map"></div>
+			<div class="map-overlay"></div>
+			<div class="title-overlay">
+				<div>Bakery Crawl</div>
+			</div>
+		</div>
+
+		<script>
+			function isMobile() {
+				return window.innerWidth <= 768;
+			}
+
+			function initializeApp() {
+				if (isMobile()) {
+					document.body.className = 'mobile';
+					document.getElementById('mobile-content').style.display = 'block';
+					
+					// Initialize Leaflet map (non-interactive)
+					var map = L.map('map', {
+						dragging: false,
+						touchZoom: false,
+						scrollWheelZoom: false,
+						doubleClickZoom: false,
+						boxZoom: false,
+						keyboard: false,
+						zoomControl: false
+					}).setView([51.5074, -0.1278], 12);
+					
+					L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+						attribution: '© OpenStreetMap contributors',
+						keepBuffer: 10, // Keep more tiles in memory
+						maxNativeZoom: 18,
+						maxZoom: 18,
+						updateWhenIdle: false, // Update tiles during animation
+						updateWhenZooming: true, // Keep updating while zooming
+						updateInterval: 150 // Faster tile updates
+					}).addTo(map);
+					
+					// Scroll-based map transition
+					let isTransitioning = false;
+					
+					window.addEventListener('scroll', function() {
+						if (isTransitioning) return; // Prevent overlapping transitions
+						
+						const scrollY = window.scrollY;
+						const maxScroll = document.body.scrollHeight - window.innerHeight;
+						const scrollProgress = Math.min(scrollY / maxScroll, 1);
+						
+						// Start: Central London coordinates: [51.5074, -0.1278], zoom 12
+						// End: Hackney (northeast) coordinates: [51.5450, -0.0550], zoom 13
+						const startLat = 51.5074;
+						const startLng = -0.1278;
+						const startZoom = 12;
+						
+						const endLat = 51.5450;  // North (higher latitude)
+						const endLng = -0.0550;  // East (higher longitude - closer to 0)
+						const endZoom = 13;
+						
+						// Interpolate coordinates and zoom
+						const currentLat = startLat + (endLat - startLat) * scrollProgress;
+						const currentLng = startLng + (endLng - startLng) * scrollProgress;
+						const currentZoom = startZoom + (endZoom - startZoom) * scrollProgress;
+						
+						// Use flyTo for smoother transitions
+						isTransitioning = true;
+						map.flyTo([currentLat, currentLng], currentZoom, {
+							duration: 0.1, // Very short duration for smoothness
+							easeLinearity: 0.8 // More linear easing
+						});
+						
+						// Reset transition flag
+						setTimeout(() => {
+							isTransitioning = false;
+						}, 100);
+					});
+					
+				} else {
+					document.body.className = 'desktop';
+					document.getElementById('desktop-message').style.display = 'block';
+				}
+			}
+
+			// Load Leaflet script dynamically
+			const script = document.createElement('script');
+			script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+			script.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
+			script.crossOrigin = '';
+			script.onload = initializeApp;
+			document.head.appendChild(script);
+		</script>
+	</body>
+</html>
