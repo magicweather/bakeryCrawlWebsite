@@ -324,6 +324,20 @@
 				border-radius: 0 0 4px 4px;
 			}
 
+			.croissant-icon {
+				width: 32px;
+				height: 32px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.croissant-icon .croissant-emoji {
+				font-size: 24px;
+				line-height: 1;
+			}
+
 			.dialog-text {
 				flex: 1;
 				font-size: 11px;
@@ -367,6 +381,21 @@
 				background: #c0c0c0;
 			}
 
+			.dialog-buttons-vertical {
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+				padding: 16px;
+				padding-top: 0;
+				align-items: center;
+			}
+
+			.dialog-btn.full-width {
+				width: 220px;
+				justify-content: center;
+				text-align: center;
+			}
+
 			/* Hide default Leaflet attribution */
 			.leaflet-control-attribution {
 				display: none !important;
@@ -395,6 +424,14 @@
 			#custom-attribution a:visited {
 				color: #551A8B;
 			}
+
+			/* Disable scrolling during popup sequence */
+			.scroll-disabled {
+				overflow: hidden !important;
+				position: fixed !important;
+				width: 100% !important;
+				height: 100% !important;
+			}
 		</style>
 	</head>
 	<body>
@@ -422,6 +459,33 @@
 						<button id="enter-fullscreen-btn" class="dialog-btn primary">Enter Fullscreen</button>
 						<button id="skip-fullscreen-btn" class="dialog-btn">Skip</button>
 					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Welcome Dialog Popup -->
+		<div id="welcome-dialog" class="fullscreen-dialog-overlay">
+			<div class="fullscreen-dialog">
+				<div class="dialog-title-bar">
+					<span>Welcome to Bakery Crawl</span>
+					<div class="dialog-controls">
+						<div class="dialog-button welcome-close-btn">×</div>
+					</div>
+				</div>
+				<div class="dialog-content">
+					<div class="dialog-icon">
+						<div class="croissant-icon">
+							<div class="croissant-emoji">🥐</div>
+						</div>
+					</div>
+					<div class="dialog-text">
+						Welcome to Bakery Crawl: Hackney Version<br>
+						Explore London's finest bakeries through this interactive journey.
+					</div>
+				</div>
+				<div class="dialog-buttons-vertical">
+					<button id="start-journey-btn" class="dialog-btn primary full-width">Start Journey, Scroll Around 😊</button>
+					<button id="move-recommendations-btn" class="dialog-btn full-width">Move to Recommendations</button>
 				</div>
 			</div>
 		</div>
@@ -487,7 +551,7 @@
 		</div>
 
 		<script>
-			// Fullscreen Dialog Functions
+			// Dialog Functions
 			function showFullscreenDialog() {
 				const dialog = document.getElementById('fullscreen-dialog');
 				dialog.style.display = 'flex';
@@ -496,6 +560,24 @@
 			function hideFullscreenDialog() {
 				const dialog = document.getElementById('fullscreen-dialog');
 				dialog.style.display = 'none';
+			}
+
+			function showWelcomeDialog() {
+				const dialog = document.getElementById('welcome-dialog');
+				dialog.style.display = 'flex';
+			}
+
+			function hideWelcomeDialog() {
+				const dialog = document.getElementById('welcome-dialog');
+				dialog.style.display = 'none';
+			}
+
+			function disableScrolling() {
+				document.body.classList.add('scroll-disabled');
+			}
+
+			function enableScrolling() {
+				document.body.classList.remove('scroll-disabled');
 			}
 
 			function requestFullscreen() {
@@ -519,20 +601,50 @@
 				enterBtn.addEventListener('click', () => {
 					requestFullscreen();
 					hideFullscreenDialog();
+					// Show welcome dialog after fullscreen
+					setTimeout(showWelcomeDialog, 300);
 				});
 
 				skipBtn.addEventListener('click', () => {
 					hideFullscreenDialog();
+					// Show welcome dialog after skipping fullscreen
+					setTimeout(showWelcomeDialog, 300);
 				});
 
 				closeBtn.addEventListener('click', () => {
 					hideFullscreenDialog();
+					// Show welcome dialog after closing fullscreen
+					setTimeout(showWelcomeDialog, 300);
 				});
 
-				// Show dialog when page loads
+				// Show dialog when page loads and disable scrolling
 				setTimeout(() => {
+					disableScrolling(); // Disable scrolling when dialogs start
 					showFullscreenDialog();
 				}, 500);
+			}
+
+			function setupWelcomeDialog() {
+				const startBtn = document.getElementById('start-journey-btn');
+				const recommendationsBtn = document.getElementById('move-recommendations-btn');
+				const closeBtn = document.querySelector('.welcome-close-btn');
+
+				startBtn.addEventListener('click', () => {
+					hideWelcomeDialog();
+					enableScrolling(); // Re-enable scrolling when welcome dialog closes
+				});
+
+				recommendationsBtn.addEventListener('click', () => {
+					hideWelcomeDialog();
+					enableScrolling(); // Re-enable scrolling when welcome dialog closes
+					// TODO: Future implementation - redirect to recommendations website
+					console.log('Move to Recommendations clicked - will redirect to recommendations site in future');
+				});
+
+				closeBtn.addEventListener('click', () => {
+					hideWelcomeDialog();
+					enableScrolling(); // Re-enable scrolling when welcome dialog closes
+				});
 			}
 
 			function isMobile() {
@@ -541,8 +653,9 @@
 
 			function initializeApp() {
 				if (isMobile()) {
-					// Setup fullscreen dialog only on mobile
+					// Setup dialogs only on mobile
 					setupFullscreenDialog();
+					setupWelcomeDialog();
 					document.body.className = 'mobile';
 					document.getElementById('mobile-content').style.display = 'block';
 					
@@ -554,11 +667,12 @@
 						doubleClickZoom: false,
 						boxZoom: false,
 						keyboard: false,
-						zoomControl: false
+						zoomControl: false,
+						attributionControl: false  // Disable built-in attribution completely
 					}).setView([51.5074, -0.1278], 12);
 					
 					L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-						attribution: '© OpenStreetMap contributors',
+						attribution: '',  // Remove attribution since we have custom one
 						keepBuffer: 20, // Keep many more tiles in memory
 						maxNativeZoom: 18,
 						maxZoom: 18,
