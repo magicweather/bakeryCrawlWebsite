@@ -49,7 +49,7 @@
 			}
 
 			#map {
-				height: calc(100vh - 50px);
+				height: calc(100vh - 62px);
 				width: calc(100% - 8px);
 				position: fixed;
 				top: 30px;
@@ -61,7 +61,7 @@
 				top: 30px;
 				left: 4px;
 				width: calc(100% - 8px);
-				height: calc(100vh - 50px);
+				height: calc(100vh - 62px);
 				background-color: rgba(0, 0, 0, 0.4);
 				z-index: 500;
 				transition: opacity 0.3s ease;
@@ -97,14 +97,14 @@
 				top: 30px;
 				left: 0;
 				width: 4px;
-				height: calc(100vh - 50px);
+				height: calc(100vh - 62px);
 			}
 
 			.window-border.right {
 				top: 30px;
 				right: 0;
 				width: 4px;
-				height: calc(100vh - 50px);
+				height: calc(100vh - 62px);
 			}
 
 			.window-border.bottom {
@@ -112,7 +112,7 @@
 				bottom: -1px;
 				left: 0;
 				width: 100vw;
-				height: 30px;
+				height: 42px;
 				z-index: 2001;
 			}
 
@@ -158,44 +158,72 @@
 
 			.window-status-bar {
 				position: fixed;
-				bottom: 6px;
+				bottom: 8px;
 				left: 2px;
 				width: calc(100vw - 4px);
-				height: 22px;
+				height: 32px;
 				background: #e0e0e0;
 				border-top: 1px solid #a0a0a0;
 				border-left: 1px solid #a0a0a0;
 				border-right: 1px solid #ffffff;
 				border-bottom: 1px solid #ffffff;
 				font-family: 'MS Sans Serif', sans-serif;
-				font-size: 9px;
+				font-size: 11px;
 				font-weight: normal;
 				display: flex;
 				align-items: center;
-				padding: 0 4px;
+				padding: 0 6px;
 				color: #000000;
 				box-sizing: border-box;
 				z-index: 2002;
-				gap: 8px;
+				gap: 10px;
 			}
 
 			.progress-container {
 				flex: 1;
-				height: 12px;
+				height: 18px;
 				background: #c0c0c0;
 				border-top: 1px solid #808080;
 				border-left: 1px solid #808080;
 				border-right: 1px solid #dfdfdf;
 				border-bottom: 1px solid #dfdfdf;
-				padding: 1px;
+				padding: 2px;
 				box-sizing: border-box;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
 			}
 
-			.progress-bar {
+			.progress-blocks {
+				position: absolute;
+				left: 2px;
+				top: 2px;
+				height: calc(100% - 4px);
+				width: calc(100% - 4px);
+				display: flex;
+				gap: 1px;
+			}
+
+			.progress-block {
+				flex: 1;
 				height: 100%;
-				background: linear-gradient(to bottom, #90c695 0%, #6b9c6f 100%);
-				width: 0%;
-				transition: width 0.05s ease;
+				background: #c0c0c0;
+				transition: background-color 0.1s ease;
+			}
+
+			.progress-block.filled {
+				background: #4a90e2;
+			}
+
+			.progress-text {
+				font-family: 'MS Sans Serif', sans-serif;
+				font-size: 9px;
+				font-weight: bold;
+				color: #000000;
+				text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
+				position: relative;
+				z-index: 1;
 			}
 		</style>
 	</head>
@@ -222,7 +250,29 @@
 					<div class="window-status-bar">
 						<span>Ready</span>
 						<div class="progress-container">
-							<div class="progress-bar" id="scroll-progress"></div>
+							<div class="progress-blocks">
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+								<div class="progress-block"></div>
+							</div>
+							<div class="progress-text" id="progress-text">0%</div>
 						</div>
 					</div>
 				</div>
@@ -391,10 +441,27 @@
 							});
 						}
 						
-						// Update progress bar
-						const progressBar = document.getElementById('scroll-progress');
-						if (progressBar) {
-							progressBar.style.width = `${scrollProgress * 100}%`;
+						// Update progress blocks in 5% increments with centered percentage text
+						const progressBlocks = document.querySelectorAll('.progress-block');
+						const progressText = document.getElementById('progress-text');
+						if (progressBlocks.length > 0 && progressText) {
+							// Round to nearest 5% increment
+							const rawPercentage = scrollProgress * 100;
+							const blockPercentage = Math.floor(rawPercentage / 5) * 5;
+							
+							// Calculate how many blocks to fill (each block represents 5%)
+							const blocksToFill = blockPercentage / 5;
+							
+							// Update blocks
+							progressBlocks.forEach((block, index) => {
+								if (index < blocksToFill) {
+									block.classList.add('filled');
+								} else {
+									block.classList.remove('filled');
+								}
+							});
+							
+							progressText.textContent = `${blockPercentage}%`;
 						}
 						
 						// Fade out original overlay
