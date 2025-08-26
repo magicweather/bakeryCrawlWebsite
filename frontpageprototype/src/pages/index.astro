@@ -6,7 +6,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Bakery Crawl</title>
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -18,12 +18,21 @@
 				margin: 0;
 				padding: 0;
 				font-family: Arial, sans-serif;
-				height: 150vh;
+			}
+
+			/* Simple scrollable content */
+			.scroll-content {
+				height: 200vh; /* Much taller to create proper scroll area */
+				width: 100%;
 				position: relative;
 			}
 
+			html {
+				overflow-x: hidden;
+			}
+
 			.mobile {
-				background-color: #98D8C8;
+				background-color: #e0e0e0;
 			}
 
 			.desktop {
@@ -40,51 +49,153 @@
 			}
 
 			#map {
-				height: 100vh;
-				width: 100%;
+				height: calc(100vh - 50px);
+				width: calc(100% - 8px);
 				position: fixed;
-				top: 0;
-				left: 0;
+				top: 30px;
+				left: 4px;
 			}
 
 			.map-overlay {
 				position: fixed;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100vh;
+				top: 30px;
+				left: 4px;
+				width: calc(100% - 8px);
+				height: calc(100vh - 50px);
 				background-color: rgba(0, 0, 0, 0.4);
 				z-index: 500;
 				transition: opacity 0.3s ease;
 			}
 
-
-			.title-overlay {
+			.windows-frame {
 				position: fixed;
-				top: 50%;
-				left: 50%;
-				transform: translate(-50%, -50%);
-				z-index: 1000;
-				color: white;
-				font-family: 'Sacramento', cursive;
-				font-size: 72px;
-				text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
 				pointer-events: none;
-				text-align: center;
-				transition: all 0.3s ease;
+				z-index: 2000;
 			}
 
-			.hackney-edition {
-				font-size: 48px;
-				margin-top: 10px;
-				opacity: 0;
-				transform: translateY(20px);
-				transition: all 0.5s ease;
+			.window-border {
+				position: absolute;
+				background: #e0e0e0;
+				border-top: 2px solid #ffffff;
+				border-left: 2px solid #ffffff;
+				border-right: 2px solid #a0a0a0;
+				border-bottom: 2px solid #a0a0a0;
 			}
 
-			.emojis {
-				font-size: 32px;
-				margin-top: 10px;
+			.window-border.top {
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 30px;
+			}
+
+			.window-border.left {
+				top: 30px;
+				left: 0;
+				width: 4px;
+				height: calc(100vh - 50px);
+			}
+
+			.window-border.right {
+				top: 30px;
+				right: 0;
+				width: 4px;
+				height: calc(100vh - 50px);
+			}
+
+			.window-border.bottom {
+				position: fixed;
+				bottom: -1px;
+				left: 0;
+				width: 100vw;
+				height: 30px;
+				z-index: 2001;
+			}
+
+			.window-title-bar {
+				position: absolute;
+				top: 2px;
+				left: 2px;
+				width: calc(100% - 4px);
+				height: 26px;
+				background: #848484;
+				color: white;
+				font-family: 'MS Sans Serif', sans-serif;
+				font-size: 11px;
+				font-weight: normal;
+				display: flex;
+				align-items: center;
+				padding: 0 8px;
+				box-sizing: border-box;
+			}
+
+			.window-controls {
+				margin-left: auto;
+				display: flex;
+				gap: 2px;
+			}
+
+			.window-button {
+				width: 16px;
+				height: 14px;
+				background: #e0e0e0;
+				border-top: 1px solid #ffffff;
+				border-left: 1px solid #ffffff;
+				border-right: 1px solid #a0a0a0;
+				border-bottom: 1px solid #a0a0a0;
+				font-size: 8px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: black;
+				font-weight: bold;
+				font-family: 'MS Sans Serif', sans-serif;
+			}
+
+			.window-status-bar {
+				position: fixed;
+				bottom: 6px;
+				left: 2px;
+				width: calc(100vw - 4px);
+				height: 22px;
+				background: #e0e0e0;
+				border-top: 1px solid #a0a0a0;
+				border-left: 1px solid #a0a0a0;
+				border-right: 1px solid #ffffff;
+				border-bottom: 1px solid #ffffff;
+				font-family: 'MS Sans Serif', sans-serif;
+				font-size: 9px;
+				font-weight: normal;
+				display: flex;
+				align-items: center;
+				padding: 0 4px;
+				color: #000000;
+				box-sizing: border-box;
+				z-index: 2002;
+				gap: 8px;
+			}
+
+			.progress-container {
+				flex: 1;
+				height: 12px;
+				background: #c0c0c0;
+				border-top: 1px solid #808080;
+				border-left: 1px solid #808080;
+				border-right: 1px solid #dfdfdf;
+				border-bottom: 1px solid #dfdfdf;
+				padding: 1px;
+				box-sizing: border-box;
+			}
+
+			.progress-bar {
+				height: 100%;
+				background: linear-gradient(to bottom, #90c695 0%, #6b9c6f 100%);
+				width: 0%;
+				transition: width 0.05s ease;
 			}
 		</style>
 	</head>
@@ -94,12 +205,32 @@
 		</div>
 
 		<div id="mobile-content" style="display: none;">
+			<div class="windows-frame">
+				<div class="window-border top">
+					<div class="window-title-bar">
+						<span>Bakery Crawl - Internet Explorer</span>
+						<div class="window-controls">
+							<div class="window-button">_</div>
+							<div class="window-button">□</div>
+							<div class="window-button">×</div>
+						</div>
+					</div>
+				</div>
+				<div class="window-border left"></div>
+				<div class="window-border right"></div>
+				<div class="window-border bottom">
+					<div class="window-status-bar">
+						<span>Ready</span>
+						<div class="progress-container">
+							<div class="progress-bar" id="scroll-progress"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
 			<div id="map"></div>
 			<div class="map-overlay"></div>
-			<div class="title-overlay">
-				<div>Bakery Crawl</div>
-				<div class="hackney-edition">Hackney Edition</div>
-			</div>
+			<div class="scroll-content"></div>
 		</div>
 
 		<script>
@@ -125,18 +256,74 @@
 					
 					L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 						attribution: '© OpenStreetMap contributors',
-						keepBuffer: 10, // Keep more tiles in memory
+						keepBuffer: 20, // Keep many more tiles in memory
 						maxNativeZoom: 18,
 						maxZoom: 18,
 						updateWhenIdle: false, // Update tiles during animation
 						updateWhenZooming: true, // Keep updating while zooming
-						updateInterval: 150 // Faster tile updates
+						updateInterval: 100, // Even faster tile updates
+						bounds: [[51.40, -0.25], [51.65, 0.05]], // Preload entire area from south London to north Hackney
+						minZoom: 11,
+						zIndex: 1
 					}).addTo(map);
 					
 					// Create a high z-index pane for Hackney boundary
 					map.createPane('hackneyPane');
 					map.getPane('hackneyPane').style.zIndex = 1001;
 					
+					// Preload tiles silently in background
+					function preloadScrollPath() {
+						console.log('Preloading map tiles for scroll path...');
+						
+						// Create invisible temporary map for preloading
+						const tempMapDiv = document.createElement('div');
+						tempMapDiv.style.width = '1px';
+						tempMapDiv.style.height = '1px';
+						tempMapDiv.style.position = 'absolute';
+						tempMapDiv.style.left = '-9999px';
+						tempMapDiv.style.opacity = '0';
+						document.body.appendChild(tempMapDiv);
+						
+						const tempMap = L.map(tempMapDiv, {
+							zoomControl: false,
+							attributionControl: false
+						});
+						
+						const tempTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+							keepBuffer: 20,
+							updateWhenIdle: false,
+							updateWhenZooming: true,
+							updateInterval: 100
+						}).addTo(tempMap);
+						
+						// Define key points along the scroll path
+						const pathPoints = [
+							{ lat: 51.5074, lng: -0.1278, zoom: 12 }, // Start: Central London
+							{ lat: 51.5200, lng: -0.1000, zoom: 12.3 }, // 25% progress
+							{ lat: 51.5300, lng: -0.0800, zoom: 12.6 }, // 50% progress
+							{ lat: 51.5375, lng: -0.0650, zoom: 12.8 }, // 75% progress
+							{ lat: 51.5420, lng: -0.0650, zoom: 12.8 } // End: Perfect Hackney view
+						];
+						
+						// Preload tiles for each point using temp map
+						pathPoints.forEach((point, index) => {
+							setTimeout(() => {
+								tempMap.setView([point.lat, point.lng], point.zoom);
+								console.log(`Preloaded tiles for point ${index + 1}/5`);
+							}, index * 300);
+						});
+						
+						// Clean up temp map after preloading
+						setTimeout(() => {
+							tempMap.remove();
+							document.body.removeChild(tempMapDiv);
+							console.log('Preloading complete, temp map cleaned up');
+						}, pathPoints.length * 300 + 1000);
+					}
+					
+					// Start preloading immediately when website loads
+					setTimeout(preloadScrollPath, 500);
+
 					// Load and add Hackney boundary
 					window.hackneyLayer = null;
 					fetch('/hackney-boundary.json')
@@ -149,33 +336,33 @@
 									color: '#98D8C8',
 									fillColor: '#98D8C8',
 									weight: 2,
-									opacity: 0,
-									fillOpacity: 0
+									opacity: 0.9,
+									fillOpacity: 0.6
 								}
 							}).addTo(map);
 							console.log('Hackney boundary layer created');
 						})
 						.catch(error => console.error('Could not load Hackney boundary:', error));
 					
-					// Scroll-based map transition
+					// Scroll-based map transition using normal window scrolling
 					let isTransitioning = false;
 					
 					window.addEventListener('scroll', function() {
 						if (isTransitioning) return; // Prevent overlapping transitions
 						
-						const scrollY = window.scrollY;
-						const maxScroll = Math.max(1, document.body.scrollHeight - window.innerHeight);
+						const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+						const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
 						const scrollProgress = Math.min(scrollY / maxScroll, 1);
 						
 						// Start: Central London coordinates: [51.5074, -0.1278], zoom 12
-						// End: Hackney (northeast) coordinates: [51.5450, -0.0550], zoom 13
+						// End: Perfect Hackney view coordinates: [51.5420, -0.0650], zoom 12.8
 						const startLat = 51.5074;
 						const startLng = -0.1278;
 						const startZoom = 12;
 						
-						const endLat = 51.5450;  // North (higher latitude)
-						const endLng = -0.0550;  // East (higher longitude - closer to 0)
-						const endZoom = 13;
+						const endLat = 51.5420;  // Perfect Hackney view latitude
+						const endLng = -0.0650;  // Perfect Hackney view longitude
+						const endZoom = 12.8;
 						
 						// Interpolate coordinates and zoom
 						const currentLat = startLat + (endLat - startLat) * scrollProgress;
@@ -185,20 +372,29 @@
 						// Use flyTo for smoother transitions
 						isTransitioning = true;
 						map.flyTo([currentLat, currentLng], currentZoom, {
-							duration: 0.1, // Very short duration for smoothness
-							easeLinearity: 0.8 // More linear easing
+							duration: 0.05, // Even shorter duration for responsiveness
+							easeLinearity: 0.9 // More linear easing
 						});
 						
-						// Show Hackney boundary and text as we scroll towards it
+						// Reduce Hackney boundary opacity as we scroll down
 						if (window.hackneyLayer) {
-							const borderOpacity = Math.max(0, scrollProgress - 0.3); // Start showing at 30% scroll
+							// Start with high opacity (0.9/0.6) and decrease as we scroll
+							const boundaryOpacity = Math.max(0.6, 0.9 - (scrollProgress * 0.3)); // Border: 0.9 -> 0.6
+							const boundaryFillOpacity = Math.max(0.4, 0.6 - (scrollProgress * 0.2)); // Fill: 0.6 -> 0.4
+							
 							window.hackneyLayer.setStyle({
 								color: '#98D8C8',
 								fillColor: '#98D8C8',
 								weight: 2,
-								opacity: borderOpacity * 0.8, // Subtle border
-								fillOpacity: borderOpacity * 0.4 // Solid pastel green fill
+								opacity: boundaryOpacity,
+								fillOpacity: boundaryFillOpacity
 							});
+						}
+						
+						// Update progress bar
+						const progressBar = document.getElementById('scroll-progress');
+						if (progressBar) {
+							progressBar.style.width = `${scrollProgress * 100}%`;
 						}
 						
 						// Fade out original overlay
@@ -209,22 +405,10 @@
 							originalOverlay.style.opacity = Math.max(0, 1 - (scrollProgress * 2));
 						}
 						
-						// Show "Hackney Edition" text
-						const hackneyText = document.querySelector('.hackney-edition');
-						if (hackneyText) {
-							if (scrollProgress > 0.4) { // Show text at 40% scroll
-								hackneyText.style.opacity = Math.min(1, (scrollProgress - 0.4) * 2);
-								hackneyText.style.transform = `translateY(${Math.max(0, 20 - (scrollProgress - 0.4) * 40)}px)`;
-							} else {
-								hackneyText.style.opacity = 0;
-								hackneyText.style.transform = 'translateY(20px)';
-							}
-						}
-						
 						// Reset transition flag
 						setTimeout(() => {
 							isTransitioning = false;
-						}, 100);
+						}, 50);
 					});
 					
 				} else {
