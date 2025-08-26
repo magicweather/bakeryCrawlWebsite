@@ -225,9 +225,178 @@
 				position: relative;
 				z-index: 1;
 			}
+
+			/* Fullscreen Dialog Styles */
+			.fullscreen-dialog-overlay {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100vw;
+				height: 100vh;
+				background: rgba(0, 0, 0, 0.5);
+				display: none;
+				align-items: center;
+				justify-content: center;
+				z-index: 9999;
+			}
+
+			.fullscreen-dialog {
+				width: 400px;
+				background: #c0c0c0;
+				border-top: 2px solid #ffffff;
+				border-left: 2px solid #ffffff;
+				border-right: 2px solid #808080;
+				border-bottom: 2px solid #808080;
+				font-family: 'MS Sans Serif', sans-serif;
+				box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+			}
+
+			.dialog-title-bar {
+				background: #000080;
+				color: white;
+				height: 20px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 2px 4px;
+				font-size: 11px;
+				font-weight: bold;
+			}
+
+			.dialog-controls {
+				display: flex;
+			}
+
+			.dialog-button {
+				width: 16px;
+				height: 14px;
+				background: #c0c0c0;
+				border-top: 1px solid #ffffff;
+				border-left: 1px solid #ffffff;
+				border-right: 1px solid #808080;
+				border-bottom: 1px solid #808080;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 8px;
+				color: black;
+				cursor: pointer;
+				font-weight: bold;
+			}
+
+			.dialog-button:active {
+				border-top: 1px solid #808080;
+				border-left: 1px solid #808080;
+				border-right: 1px solid #ffffff;
+				border-bottom: 1px solid #ffffff;
+			}
+
+			.dialog-content {
+				padding: 16px;
+				display: flex;
+				gap: 16px;
+				align-items: flex-start;
+			}
+
+			.dialog-icon {
+				flex-shrink: 0;
+			}
+
+			.monitor-icon {
+				width: 32px;
+				height: 32px;
+				position: relative;
+			}
+
+			.monitor-icon .screen {
+				width: 28px;
+				height: 20px;
+				background: #008080;
+				border: 2px solid #404040;
+				border-radius: 2px;
+			}
+
+			.monitor-icon .base {
+				width: 20px;
+				height: 6px;
+				background: #808080;
+				margin: 2px auto 0;
+				border-radius: 0 0 4px 4px;
+			}
+
+			.dialog-text {
+				flex: 1;
+				font-size: 11px;
+				line-height: 1.4;
+				color: #000000;
+				margin-top: 4px;
+			}
+
+			.dialog-buttons {
+				display: flex;
+				gap: 8px;
+				justify-content: flex-end;
+				margin-top: 20px;
+			}
+
+			.dialog-btn {
+				min-width: 80px;
+				height: 24px;
+				background: #c0c0c0;
+				border-top: 1px solid #ffffff;
+				border-left: 1px solid #ffffff;
+				border-right: 1px solid #808080;
+				border-bottom: 1px solid #808080;
+				font-family: 'MS Sans Serif', sans-serif;
+				font-size: 11px;
+				color: #000000;
+				cursor: pointer;
+				padding: 0 8px;
+			}
+
+			.dialog-btn:active {
+				border-top: 1px solid #808080;
+				border-left: 1px solid #808080;
+				border-right: 1px solid #ffffff;
+				border-bottom: 1px solid #ffffff;
+			}
+
+			.dialog-btn.primary {
+				font-weight: bold;
+				border: 2px solid #000000;
+				background: #c0c0c0;
+			}
 		</style>
 	</head>
 	<body>
+		<!-- Fullscreen Dialog Popup -->
+		<div id="fullscreen-dialog" class="fullscreen-dialog-overlay">
+			<div class="fullscreen-dialog">
+				<div class="dialog-title-bar">
+					<span>Bakery Crawl - Fullscreen Experience</span>
+					<div class="dialog-controls">
+						<div class="dialog-button close-btn">×</div>
+					</div>
+				</div>
+				<div class="dialog-content">
+					<div class="dialog-icon">
+						<div class="monitor-icon">
+							<div class="screen"></div>
+							<div class="base"></div>
+						</div>
+					</div>
+					<div class="dialog-text">
+						This is a fullscreen experience.<br>
+						Click "Enter Fullscreen" for the best viewing experience.
+					</div>
+					<div class="dialog-buttons">
+						<button id="enter-fullscreen-btn" class="dialog-btn primary">Enter Fullscreen</button>
+						<button id="skip-fullscreen-btn" class="dialog-btn">Skip</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div id="desktop-message" class="desktop-message" style="display: none;">
 			Please open the website on your mobile phone
 		</div>
@@ -284,12 +453,62 @@
 		</div>
 
 		<script>
+			// Fullscreen Dialog Functions
+			function showFullscreenDialog() {
+				const dialog = document.getElementById('fullscreen-dialog');
+				dialog.style.display = 'flex';
+			}
+
+			function hideFullscreenDialog() {
+				const dialog = document.getElementById('fullscreen-dialog');
+				dialog.style.display = 'none';
+			}
+
+			function requestFullscreen() {
+				const elem = document.documentElement;
+				if (elem.requestFullscreen) {
+					elem.requestFullscreen();
+				} else if (elem.mozRequestFullScreen) {
+					elem.mozRequestFullScreen();
+				} else if (elem.webkitRequestFullscreen) {
+					elem.webkitRequestFullscreen();
+				} else if (elem.msRequestFullscreen) {
+					elem.msRequestFullscreen();
+				}
+			}
+
+			function setupFullscreenDialog() {
+				const enterBtn = document.getElementById('enter-fullscreen-btn');
+				const skipBtn = document.getElementById('skip-fullscreen-btn');
+				const closeBtn = document.querySelector('.close-btn');
+
+				enterBtn.addEventListener('click', () => {
+					requestFullscreen();
+					hideFullscreenDialog();
+				});
+
+				skipBtn.addEventListener('click', () => {
+					hideFullscreenDialog();
+				});
+
+				closeBtn.addEventListener('click', () => {
+					hideFullscreenDialog();
+				});
+
+				// Show dialog when page loads
+				setTimeout(() => {
+					showFullscreenDialog();
+				}, 500);
+			}
+
 			function isMobile() {
 				return window.innerWidth <= 768;
 			}
 
 			function initializeApp() {
 				if (isMobile()) {
+					// Setup fullscreen dialog only on mobile
+					setupFullscreenDialog();
 					document.body.className = 'mobile';
 					document.getElementById('mobile-content').style.display = 'block';
 					
