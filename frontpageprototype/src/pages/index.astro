@@ -425,6 +425,75 @@
 				color: #551A8B;
 			}
 
+			/* Custom Bakery Markers - 3D Popup Style */
+			.custom-div-icon {
+				z-index: 9999 !important; /* Way above Hackney boundary (1001) and window elements */
+			}
+
+			:global(.bakery-marker) {
+				background: #4A90E2 !important;
+				border: 2px solid #ffffff !important;
+				width: 32px !important;
+				height: 32px !important;
+				border-radius: 50% !important;
+				display: flex !important;
+				align-items: center !important;
+				justify-content: center !important;
+				font-size: 16px !important;
+				font-weight: bold !important;
+				color: white !important;
+				cursor: pointer !important;
+				box-shadow: 0 3px 10px rgba(0,0,0,0.4) !important;
+				transition: all 0.2s ease !important;
+				position: relative !important;
+				z-index: 2001 !important;
+			}
+			
+			:global(.bakery-marker::after) {
+				content: '' !important;
+				position: absolute !important;
+				top: 100% !important;
+				left: 50% !important;
+				width: 0 !important;
+				height: 0 !important;
+				border-left: 8px solid transparent !important;
+				border-right: 8px solid transparent !important;
+				border-top: 12px solid #4A90E2 !important;
+				transform: translateX(-50%) !important;
+				z-index: 2000 !important;
+			}
+			
+			:global(.bakery-marker::before) {
+				content: '' !important;
+				position: absolute !important;
+				top: 100% !important;
+				left: 50% !important;
+				width: 0 !important;
+				height: 0 !important;
+				border-left: 10px solid transparent !important;
+				border-right: 10px solid transparent !important;
+				border-top: 14px solid #ffffff !important;
+				transform: translateX(-50%) !important;
+				z-index: 1999 !important;
+			}
+
+			:global(.bakery-marker .marker-number) {
+				font-family: 'Arial', sans-serif !important;
+				line-height: 1 !important;
+				transform: none !important;
+			}
+
+			:global(.bakery-marker:hover) {
+				transform: scale(1.2) !important;
+				box-shadow: 0 5px 15px rgba(0,0,0,0.5) !important;
+				z-index: 2002 !important;
+			}
+
+			:global(.bakery-marker:active) {
+				transform: scale(1.1) !important;
+			}
+
+
 			/* Disable scrolling during popup sequence */
 			.scroll-disabled {
 				overflow: hidden !important;
@@ -688,6 +757,10 @@
 					map.createPane('hackneyPane');
 					map.getPane('hackneyPane').style.zIndex = 1001;
 					
+					// Create an even higher z-index pane for bakery markers
+					map.createPane('bakeryPane');
+					map.getPane('bakeryPane').style.zIndex = 2000;
+					
 					// Preload tiles silently in background
 					function preloadScrollPath() {
 						console.log('Preloading map tiles for scroll path...');
@@ -760,6 +833,46 @@
 							console.log('Hackney boundary layer created');
 						})
 						.catch(error => console.error('Could not load Hackney boundary:', error));
+
+					// Add large numbered bakery markers - spread across Hackney borough
+					const bakeries = [
+						{ name: "Sweet Dreams Bakery", lat: 51.5500, lng: -0.0550, number: 1 }, // North Hackney
+						{ name: "Croissant Corner", lat: 51.5350, lng: -0.0750, number: 2 }, // South West
+						{ name: "Artisan Bread Co.", lat: 51.5480, lng: -0.0420, number: 3 }, // East Hackney
+						{ name: "Cake Dreams", lat: 51.5380, lng: -0.0580, number: 4 }, // Central South
+						{ name: "The French Bakery", lat: 51.5520, lng: -0.0680, number: 5 }, // North West
+						{ name: "Morning Glory Bakery", lat: 51.5320, lng: -0.0480, number: 6 }, // South East
+						{ name: "Hackney Sourdough", lat: 51.5460, lng: -0.0620, number: 7 }, // Central
+						{ name: "Sugar & Spice", lat: 51.5400, lng: -0.0450, number: 8 } // East Central
+					];
+
+					function createBakeryMarker(bakery) {
+						const icon = L.divIcon({
+							html: `<div class="bakery-marker" data-name="${bakery.name}"><span class="marker-number">${bakery.number}</span></div>`,
+							className: 'custom-div-icon',
+							iconSize: [32, 44], // Circular top + triangle pointer (width, total height)
+							iconAnchor: [16, 44], // Center horizontally, anchor at bottom of pointer
+							popupAnchor: [0, -44]
+						});
+
+						const marker = L.marker([bakery.lat, bakery.lng], { 
+							icon: icon,
+							pane: 'bakeryPane', // Use custom high z-index pane
+							zIndexOffset: 1000 // Additional offset within the pane
+						}).addTo(map);
+						
+						marker.on('click', function(e) {
+							console.log(`Clicked on ${bakery.name} (#${bakery.number})`);
+							// TODO: Add popup or detailed view for bakery
+							alert(`${bakery.number}. ${bakery.name}! 🥧`);
+							e.originalEvent.stopPropagation(); // Prevent map click
+						});
+
+						return marker;
+					}
+
+					// Create all bakery markers
+					bakeries.forEach(bakery => createBakeryMarker(bakery));
 					
 					// Scroll-based map transition using normal window scrolling
 					let isTransitioning = false;
