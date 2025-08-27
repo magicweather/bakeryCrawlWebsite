@@ -425,72 +425,19 @@
 				color: #551A8B;
 			}
 
-			/* Custom Bakery Markers - 3D Popup Style */
-			.custom-div-icon {
-				z-index: 9999 !important; /* Way above Hackney boundary (1001) and window elements */
-			}
-
-			:global(.bakery-marker) {
-				background: #4A90E2 !important;
-				border: 2px solid #ffffff !important;
-				width: 32px !important;
-				height: 32px !important;
-				border-radius: 50% !important;
-				display: flex !important;
-				align-items: center !important;
-				justify-content: center !important;
-				font-size: 16px !important;
-				font-weight: bold !important;
-				color: white !important;
+			/* SVG Bakery Markers */
+			.svg-marker-icon {
+				z-index: 9999 !important; /* Way above Hackney boundary and other elements */
 				cursor: pointer !important;
-				box-shadow: 0 3px 10px rgba(0,0,0,0.4) !important;
-				transition: all 0.2s ease !important;
-				position: relative !important;
-				z-index: 2001 !important;
-			}
-			
-			:global(.bakery-marker::after) {
-				content: '' !important;
-				position: absolute !important;
-				top: 100% !important;
-				left: 50% !important;
-				width: 0 !important;
-				height: 0 !important;
-				border-left: 8px solid transparent !important;
-				border-right: 8px solid transparent !important;
-				border-top: 12px solid #4A90E2 !important;
-				transform: translateX(-50%) !important;
-				z-index: 2000 !important;
-			}
-			
-			:global(.bakery-marker::before) {
-				content: '' !important;
-				position: absolute !important;
-				top: 100% !important;
-				left: 50% !important;
-				width: 0 !important;
-				height: 0 !important;
-				border-left: 10px solid transparent !important;
-				border-right: 10px solid transparent !important;
-				border-top: 14px solid #ffffff !important;
-				transform: translateX(-50%) !important;
-				z-index: 1999 !important;
 			}
 
-			:global(.bakery-marker .marker-number) {
-				font-family: 'Arial', sans-serif !important;
-				line-height: 1 !important;
-				transform: none !important;
+			.svg-marker-icon:hover svg {
+				transform: scale(1.1);
+				transition: transform 0.2s ease;
 			}
 
-			:global(.bakery-marker:hover) {
-				transform: scale(1.2) !important;
-				box-shadow: 0 5px 15px rgba(0,0,0,0.5) !important;
-				z-index: 2002 !important;
-			}
-
-			:global(.bakery-marker:active) {
-				transform: scale(1.1) !important;
+			.svg-marker-icon:active svg {
+				transform: scale(1.05);
 			}
 
 
@@ -846,13 +793,24 @@
 						{ name: "Sugar & Spice", lat: 51.5400, lng: -0.0450, number: 8 } // East Central
 					];
 
+					function createSVGMarker(number) {
+						return `
+							<svg width="40" height="50" viewBox="0 0 40 50" style="filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));">
+								<path d="M20 0C9 0 0 9 0 20c0 15 20 30 20 30s20-15 20-30C40 9 31 0 20 0z" 
+									  fill="#0ea5e9"/>
+								<text x="20" y="28" text-anchor="middle" fill="white" 
+									  font-family="Arial, sans-serif" font-size="16" font-weight="bold">${number}</text>
+							</svg>
+						`;
+					}
+
 					function createBakeryMarker(bakery) {
 						const icon = L.divIcon({
-							html: `<div class="bakery-marker" data-name="${bakery.name}"><span class="marker-number">${bakery.number}</span></div>`,
-							className: 'custom-div-icon',
-							iconSize: [32, 44], // Circular top + triangle pointer (width, total height)
-							iconAnchor: [16, 44], // Center horizontally, anchor at bottom of pointer
-							popupAnchor: [0, -44]
+							html: createSVGMarker(bakery.number),
+							className: 'svg-marker-icon',
+							iconSize: [40, 50], // SVG dimensions
+							iconAnchor: [20, 50], // Center horizontally, anchor at bottom point
+							popupAnchor: [0, -50]
 						});
 
 						const marker = L.marker([bakery.lat, bakery.lng], { 
