@@ -571,6 +571,25 @@
 			</div>
 		</div>
 
+		<!-- Bakery Info Popup -->
+		<div id="bakery-popup" class="fullscreen-dialog-overlay">
+			<div class="fullscreen-dialog">
+				<div class="dialog-title-bar">
+					<span id="bakery-popup-title">Bakery Information</span>
+					<div class="dialog-controls">
+						<div class="dialog-button" onclick="hideBakeryPopup()">×</div>
+					</div>
+				</div>
+				<div class="dialog-content">
+					<div class="dialog-icon">ℹ️</div>
+					<div class="dialog-text">
+						<h3 id="bakery-name-display">Bakery Name</h3>
+						<p>Welcome to this delicious bakery on our Hackney crawl!</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<script>
 			// Dialog Functions
 			function showFullscreenDialog() {
@@ -592,6 +611,22 @@
 				const dialog = document.getElementById('welcome-dialog');
 				dialog.style.display = 'none';
 			}
+
+			function showBakeryPopup(bakeryName) {
+				const dialog = document.getElementById('bakery-popup');
+				const nameDisplay = document.getElementById('bakery-name-display');
+				nameDisplay.textContent = bakeryName;
+				dialog.style.display = 'flex';
+			}
+
+			function hideBakeryPopup() {
+				const dialog = document.getElementById('bakery-popup');
+				dialog.style.display = 'none';
+			}
+
+			// Make functions globally accessible
+			window.hideBakeryPopup = hideBakeryPopup;
+			window.showBakeryPopup = showBakeryPopup;
 
 			function disableScrolling() {
 				document.body.classList.add('scroll-disabled');
@@ -639,11 +674,10 @@
 				});
 
 				// Show dialog when page loads and disable scrolling
-				// TEMPORARILY DISABLED FOR DEVELOPMENT - markers need to be clickable
-				// setTimeout(() => {
-				// 	disableScrolling(); // Disable scrolling when dialogs start
-				// 	showFullscreenDialog();
-				// }, 500);
+				setTimeout(() => {
+					disableScrolling(); // Disable scrolling when dialogs start
+					showFullscreenDialog();
+				}, 500);
 			}
 
 			function setupWelcomeDialog() {
@@ -868,6 +902,9 @@
 							scaleMarker(currentScale);
 							
 							console.log(`${bakery.name} scaled to ${(currentScale * 100).toFixed(0)}%`);
+							
+							// Show bakery popup
+							showBakeryPopup(bakery.name);
 							
 							// Set timer to reset size after 1 second of no interaction
 							resetTimer = setTimeout(resetMarkerSize, 1000);
