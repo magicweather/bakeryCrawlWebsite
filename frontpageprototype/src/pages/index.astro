@@ -25,6 +25,7 @@
 				height: 250vh; /* Increased height to ensure 0% and 100% can be reached */
 				width: 100%;
 				position: relative;
+				pointer-events: none; /* Allow clicks to pass through to markers */
 			}
 
 			html {
@@ -65,6 +66,7 @@
 				background-color: rgba(0, 0, 0, 0.4);
 				z-index: 500;
 				transition: opacity 0.3s ease;
+				pointer-events: none; /* Allow clicks to pass through to markers */
 			}
 
 			.windows-frame {
@@ -431,13 +433,16 @@
 				cursor: pointer !important;
 			}
 
+			.svg-marker-icon svg {
+				transition: transform 0.3s ease-out; /* Smooth scaling animation */
+			}
+
 			.svg-marker-icon:hover svg {
-				transform: scale(1.1);
-				transition: transform 0.2s ease;
+				filter: brightness(1.1); /* Slight brightness increase on hover */
 			}
 
 			.svg-marker-icon:active svg {
-				transform: scale(1.05);
+				filter: brightness(0.9); /* Slight dimming when clicked */
 			}
 
 
@@ -634,10 +639,11 @@
 				});
 
 				// Show dialog when page loads and disable scrolling
-				setTimeout(() => {
-					disableScrolling(); // Disable scrolling when dialogs start
-					showFullscreenDialog();
-				}, 500);
+				// TEMPORARILY DISABLED FOR DEVELOPMENT - markers need to be clickable
+				// setTimeout(() => {
+				// 	disableScrolling(); // Disable scrolling when dialogs start
+				// 	showFullscreenDialog();
+				// }, 500);
 			}
 
 			function setupWelcomeDialog() {
@@ -805,6 +811,10 @@
 					}
 
 					function createBakeryMarker(bakery) {
+						// Track scale and reset timer for this marker
+						let currentScale = 1.0;
+						let resetTimer = null;
+						
 						const icon = L.divIcon({
 							html: createSVGMarker(bakery.number),
 							className: 'svg-marker-icon',
@@ -819,10 +829,49 @@
 							zIndexOffset: 1000 // Additional offset within the pane
 						}).addTo(map);
 						
+						function scaleMarker(scale) {
+							const markerElement = marker.getElement();
+							const svgElement = markerElement.querySelector('svg');
+							if (svgElement) {
+								// Scale the SVG
+								svgElement.style.transform = `scale(${scale})`;
+								svgElement.style.transformOrigin = 'center bottom';
+								
+								// Scale the parent container to prevent clipping
+								markerElement.style.width = `${40 * scale}px`;
+								markerElement.style.height = `${50 * scale}px`;
+								
+								// Adjust margins to keep centered
+								markerElement.style.marginLeft = `${-20 * scale}px`;
+								markerElement.style.marginTop = `${-50 * scale}px`;
+							}
+						}
+						
+						function resetMarkerSize() {
+							currentScale = 1.0;
+							scaleMarker(1.0);
+							console.log(`${bakery.name} size reset to normal`);
+						}
+						
+						// Handle click/tap events
 						marker.on('click', function(e) {
 							console.log(`Clicked on ${bakery.name} (#${bakery.number})`);
-							// TODO: Add popup or detailed view for bakery
-							alert(`${bakery.number}. ${bakery.name}! 🥧`);
+							
+							// Clear any existing reset timer
+							if (resetTimer) {
+								clearTimeout(resetTimer);
+								resetTimer = null;
+							}
+							
+							// Increase scale by 10%
+							currentScale += 0.1;
+							scaleMarker(currentScale);
+							
+							console.log(`${bakery.name} scaled to ${(currentScale * 100).toFixed(0)}%`);
+							
+							// Set timer to reset size after 1 second of no interaction
+							resetTimer = setTimeout(resetMarkerSize, 1000);
+							
 							e.originalEvent.stopPropagation(); // Prevent map click
 						});
 
