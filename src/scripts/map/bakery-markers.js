@@ -13,7 +13,7 @@ export const BAKERIES = [
     lng: -0.0577733, 
     number: 1,
     googleMapsLink: "https://www.google.com/maps/place/FORNO/@51.5346062,-0.0603482,17z/data=!3m1!4b1!4m6!3m5!1s0x48761dbe754b5b21:0x3afd19dd9582124b!8m2!3d51.5346029!4d-0.0577733!16s%2Fg%2F11sckjr3n7",
-    recommendation: "Try their authentic Italian sourdough focaccia - absolutely divine!"
+    recommendation: "Try their signature maritozzo and the indulgent milk chocolate & sea salt praline bun"
   },
   { 
     name: "Ozone Coffee - London Fields", 
@@ -21,7 +21,7 @@ export const BAKERIES = [
     lng: -0.0611383, 
     number: 2,
     googleMapsLink: "https://www.google.com/maps/place/Ozone+Coffee+-+London+Fields/@51.5348725,-0.0610221,16.5z/data=!4m14!1m7!3m6!1s0x48761dbe754b5b21:0x3afd19dd9582124b!2sFORNO!8m2!3d51.5346029!4d-0.0577733!16s%2Fg%2F11sckjr3n7!3m5!1s0x48761da6733e80f1:0xa75bf5b2e11bac71!8m2!3d51.532553!4d-0.0611383!16s%2Fg%2F11h5nd0rrb",
-    recommendation: "Famous for their specialty coffee and amazing avocado toast - perfect brunch spot!"
+    recommendation: "Specialty coffee and our first coffee break of the day"
   },
   { 
     name: "Specialty Cafetiere", 
@@ -29,7 +29,7 @@ export const BAKERIES = [
     lng: -0.0629956, 
     number: 3,
     googleMapsLink: "https://maps.app.goo.gl/manVHquGMKK9Crii6",
-    recommendation: "Specialty coffee roasters with amazing pastries and light bites - perfect for caffeine lovers!"
+    recommendation: "Another specialty coffee spot with some burrata-mortadella-pistachio croissants"
   },
   { 
     name: "Pophams London Fields", 
@@ -37,7 +37,7 @@ export const BAKERIES = [
     lng: -0.0575894, 
     number: 4,
     googleMapsLink: "https://maps.app.goo.gl/443HKgpEFfqRKNeE6",
-    recommendation: "Legendary croissants and pastries - their weekend queue speaks for itself!"
+    recommendation: "They do weekly special bakes - worth asking for what's new this week! They're working with Smokestack UK to bring some savoury BBQ pastries and toasties"
   },
   { 
     name: "Violet Cakes", 
@@ -45,7 +45,7 @@ export const BAKERIES = [
     lng: -0.0640996, 
     number: 5,
     googleMapsLink: "https://www.google.com/maps/place/Violet+Cakes/@51.5454867,-0.0666745,17z/data=!3m1!4b1!4m6!3m5!1s0x48761cede637de39:0xa132cd648e549b7d!8m2!3d51.5454834!4d-0.0640996!16s%2Fg%2F1tfg2kyg?entry=ttu&g_ep=EgoyMDI1MDgyNS4wIKXMDSoASAFQAw%3D%3D",
-    recommendation: "Exquisite handcrafted cakes and delicate pastries - Instagram-worthy treats that taste even better!"
+    recommendation: "Famous for their banana bread, kimchi and blue cheese toastie, and chocolate cupcakes"
   },
   { 
     name: "The Dusty Knuckle Bakery", 
@@ -53,7 +53,7 @@ export const BAKERIES = [
     lng: -0.074094, 
     number: 6,
     googleMapsLink: "https://maps.app.goo.gl/N3VvRxKkjc4N2Jp5A",
-    recommendation: "Social enterprise bakery with incredible sourdough and community spirit - every bite supports a great cause!"
+    recommendation: "Everything! We will be hoping to try their sandwiches this weekend"
   },
   { 
     name: "Toconoco", 
@@ -61,7 +61,7 @@ export const BAKERIES = [
     lng: -0.0783027, 
     number: 7,
     googleMapsLink: "https://maps.app.goo.gl/Bh9pppQov4vLCf9h6",
-    recommendation: "Artisanal bean-to-bar chocolate makers with heavenly pastries - a sweet paradise for chocolate lovers!"
+    recommendation: "Final spot of the day, known for their matcha lattes, bento boxes and cakes"
   }
 ];
 
