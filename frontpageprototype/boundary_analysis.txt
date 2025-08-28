@@ -1,1 +1,0 @@
-Analysis error: TopologyException: side location conflict at -0.069863077537704696 51.571128166050364. This can occur if the input geometry is invalid.
