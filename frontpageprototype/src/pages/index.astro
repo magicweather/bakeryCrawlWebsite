@@ -744,6 +744,10 @@
 					map.createPane('hackneyPane');
 					map.getPane('hackneyPane').style.zIndex = 1001;
 					
+					// Create a pane for Westminster boundary  
+					map.createPane('westminsterPane');
+					map.getPane('westminsterPane').style.zIndex = 1002;
+					
 					// Create an even higher z-index pane for bakery markers
 					map.createPane('bakeryPane');
 					map.getPane('bakeryPane').style.zIndex = 2000;
@@ -820,6 +824,26 @@
 							console.log('Hackney boundary layer created');
 						})
 						.catch(error => console.error('Could not load Hackney boundary:', error));
+
+					// Load and add Westminster boundary with red styling
+					window.westminsterLayer = null;
+					fetch('/westminster-boundary.json')
+						.then(response => response.json())
+						.then(data => {
+							console.log('Loading Westminster boundary with', data.geometry.coordinates[0].length, 'points');
+							window.westminsterLayer = L.geoJSON(data, {
+								pane: 'westminsterPane',
+								style: {
+									color: '#DC2626',        // Red outline
+									fillColor: '#DC2626',    // Red fill
+									weight: 2,
+									opacity: 0.9,
+									fillOpacity: 0.3         // Translucent red fill
+								}
+							}).addTo(map);
+							console.log('Westminster boundary layer created');
+						})
+						.catch(error => console.error('Could not load Westminster boundary:', error));
 
 					// Add large numbered bakery markers - spread across Hackney borough
 					const bakeries = [
@@ -978,6 +1002,21 @@
 								weight: 2,
 								opacity: boundaryOpacity,
 								fillOpacity: boundaryFillOpacity
+							});
+						}
+						
+						// Reduce Westminster boundary opacity as we scroll down  
+						if (window.westminsterLayer) {
+							// Start with high opacity (0.9/0.3) and decrease as we scroll
+							const redBoundaryOpacity = Math.max(0.6, 0.9 - (scrollProgress * 0.3)); // Border: 0.9 -> 0.6
+							const redBoundaryFillOpacity = Math.max(0.1, 0.3 - (scrollProgress * 0.2)); // Fill: 0.3 -> 0.1
+							
+							window.westminsterLayer.setStyle({
+								color: '#DC2626',
+								fillColor: '#DC2626', 
+								weight: 2,
+								opacity: redBoundaryOpacity,
+								fillOpacity: redBoundaryFillOpacity
 							});
 						}
 						
