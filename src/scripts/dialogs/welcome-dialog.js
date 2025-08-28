@@ -4,6 +4,7 @@
 
 import { showDialog, hideDialog } from './dialog-manager.js';
 import { setScrollingDisabled } from '../utils/dom-helpers.js';
+import { showRecommendationsPopup } from './recommendations-dialog.js';
 
 /**
  * Initialize welcome dialog functionality
@@ -25,9 +26,8 @@ export function initializeWelcomeDialog() {
   if (recommendationsBtn) {
     recommendationsBtn.addEventListener('click', () => {
       hideDialog('welcome-dialog');
-      setScrollingDisabled(false);
-      // TODO: Future implementation - redirect to recommendations website
-      console.log('Move to Recommendations clicked - will redirect to recommendations site in future');
+      // Show recommendations popup instead of external redirect
+      showRecommendationsPopup();
     });
   }
 

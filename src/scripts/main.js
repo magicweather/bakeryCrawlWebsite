@@ -6,6 +6,7 @@ import { initializeDeviceSpecificUI } from './utils/device-detection.js';
 import { initializeFullscreenDialog } from './dialogs/fullscreen-dialog.js';
 import { initializeWelcomeDialog } from './dialogs/welcome-dialog.js';
 import { initializeBakeryPopup } from './dialogs/bakery-popup.js';
+import { initializeRecommendationsDialog } from './dialogs/recommendations-dialog.js';
 import { initializeMap } from './map/map-manager.js';
 
 /**
@@ -22,6 +23,7 @@ async function initializeApp() {
       initializeFullscreenDialog();
       initializeWelcomeDialog();
       initializeBakeryPopup();
+      initializeRecommendationsDialog();
       
       // Initialize the map and all its functionality
       await initializeMap();

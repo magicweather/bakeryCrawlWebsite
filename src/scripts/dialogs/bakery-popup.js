@@ -37,12 +37,8 @@ export function hideBakeryPopup() {
  * Initialize bakery popup functionality
  */
 export function initializeBakeryPopup() {
-  // Make hideBakeryPopup available globally for onclick handler
-  window.hideBakeryPopup = hideBakeryPopup;
-  window.showBakeryPopup = showBakeryPopup;
-  
-  // Add event listener for close button
-  const closeBtn = document.querySelector('#bakery-popup .dialog-button');
+  // Add event listener for close button using data attribute
+  const closeBtn = document.querySelector('[data-close-bakery]');
   if (closeBtn) {
     closeBtn.addEventListener('click', hideBakeryPopup);
   }
