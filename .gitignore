@@ -91,3 +91,6 @@ coverage/
 .cache/
 .tmp/
 .temp/
+
+# Claude testing and development files
+claudetesting/
