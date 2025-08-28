@@ -294,14 +294,17 @@
 			}
 
 			.dialog-content {
-				padding: 16px;
+				padding: 12px;
 				display: flex;
-				gap: 16px;
+				gap: 8px;
 				align-items: flex-start;
 			}
 
 			.dialog-icon {
 				flex-shrink: 0;
+				font-size: 16px;
+				line-height: 1.2;
+				margin-top: 2px;
 			}
 
 			.monitor-icon {
@@ -345,7 +348,14 @@
 				font-size: 11px;
 				line-height: 1.4;
 				color: #000000;
-				margin-top: 4px;
+				margin-top: 0;
+			}
+
+			.dialog-text h3 {
+				margin: 0 0 6px 0;
+				font-size: 12px;
+				font-weight: bold;
+				line-height: 1.2;
 			}
 
 			.dialog-buttons {
@@ -581,10 +591,13 @@
 					</div>
 				</div>
 				<div class="dialog-content">
-					<div class="dialog-icon">ℹ️</div>
+					<div class="dialog-icon">🥖</div>
 					<div class="dialog-text">
 						<h3 id="bakery-name-display">Bakery Name</h3>
-						<p>Welcome to this delicious bakery on our Hackney crawl!</p>
+						<p id="bakery-recommendation">Our recommendation will appear here...</p>
+						<div class="google-maps-link">
+							<a id="bakery-maps-link" href="#" target="_blank" style="color: #0000FF; text-decoration: underline;">📍 View on Google Maps</a>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -612,10 +625,16 @@
 				dialog.style.display = 'none';
 			}
 
-			function showBakeryPopup(bakeryName) {
+			function showBakeryPopup(bakery) {
 				const dialog = document.getElementById('bakery-popup');
 				const nameDisplay = document.getElementById('bakery-name-display');
-				nameDisplay.textContent = bakeryName;
+				const recommendationDisplay = document.getElementById('bakery-recommendation');
+				const mapsLink = document.getElementById('bakery-maps-link');
+				
+				nameDisplay.textContent = bakery.name;
+				recommendationDisplay.textContent = bakery.recommendation;
+				mapsLink.href = bakery.googleMapsLink;
+				
 				dialog.style.display = 'flex';
 			}
 
@@ -845,16 +864,65 @@
 						})
 						.catch(error => console.error('Could not load Westminster boundary:', error));
 
-					// Add large numbered bakery markers - spread across Hackney borough
+					// Bakery Crawl locations - easily reorderable list
 					const bakeries = [
-						{ name: "Sweet Dreams Bakery", lat: 51.5500, lng: -0.0550, number: 1 }, // North Hackney
-						{ name: "Croissant Corner", lat: 51.5350, lng: -0.0750, number: 2 }, // South West
-						{ name: "Artisan Bread Co.", lat: 51.5480, lng: -0.0420, number: 3 }, // East Hackney
-						{ name: "Cake Dreams", lat: 51.5380, lng: -0.0580, number: 4 }, // Central South
-						{ name: "The French Bakery", lat: 51.5520, lng: -0.0680, number: 5 }, // North West
-						{ name: "Morning Glory Bakery", lat: 51.5320, lng: -0.0480, number: 6 }, // South East
-						{ name: "Hackney Sourdough", lat: 51.5460, lng: -0.0620, number: 7 }, // Central
-						{ name: "Sugar & Spice", lat: 51.5400, lng: -0.0450, number: 8 } // East Central
+						{ 
+							name: "FORNO", 
+							lat: 51.5346029, 
+							lng: -0.0577733, 
+							number: 1,
+							googleMapsLink: "https://www.google.com/maps/place/FORNO/@51.5346062,-0.0603482,17z/data=!3m1!4b1!4m6!3m5!1s0x48761dbe754b5b21:0x3afd19dd9582124b!8m2!3d51.5346029!4d-0.0577733!16s%2Fg%2F11sckjr3n7",
+							recommendation: "Try their authentic Italian sourdough focaccia - absolutely divine!"
+						},
+						{ 
+							name: "Ozone Coffee - London Fields", 
+							lat: 51.532553, 
+							lng: -0.0611383, 
+							number: 2,
+							googleMapsLink: "https://www.google.com/maps/place/Ozone+Coffee+-+London+Fields/@51.5348725,-0.0610221,16.5z/data=!4m14!1m7!3m6!1s0x48761dbe754b5b21:0x3afd19dd9582124b!2sFORNO!8m2!3d51.5346029!4d-0.0577733!16s%2Fg%2F11sckjr3n7!3m5!1s0x48761da6733e80f1:0xa75bf5b2e11bac71!8m2!3d51.532553!4d-0.0611383!16s%2Fg%2F11h5nd0rrb",
+							recommendation: "Famous for their specialty coffee and amazing avocado toast - perfect brunch spot!"
+						},
+						{ 
+							name: "Specialty Cafetiere", 
+							lat: 51.5317801, 
+							lng: -0.0629956, 
+							number: 3,
+							googleMapsLink: "https://maps.app.goo.gl/manVHquGMKK9Crii6",
+							recommendation: "Specialty coffee roasters with amazing pastries and light bites - perfect for caffeine lovers!"
+						},
+						{ 
+							name: "Pophams London Fields", 
+							lat: 51.5436252, 
+							lng: -0.0575894, 
+							number: 4,
+							googleMapsLink: "https://maps.app.goo.gl/443HKgpEFfqRKNeE6",
+							recommendation: "Legendary croissants and pastries - their weekend queue speaks for itself!"
+						},
+						{ 
+							name: "Violet Cakes", 
+							lat: 51.5454834, 
+							lng: -0.0640996, 
+							number: 5,
+							googleMapsLink: "https://www.google.com/maps/place/Violet+Cakes/@51.5454867,-0.0666745,17z/data=!3m1!4b1!4m6!3m5!1s0x48761cede637de39:0xa132cd648e549b7d!8m2!3d51.5454834!4d-0.0640996!16s%2Fg%2F1tfg2kyg?entry=ttu&g_ep=EgoyMDI1MDgyNS4wIKXMDSoASAFQAw%3D%3D",
+							recommendation: "Exquisite handcrafted cakes and delicate pastries - Instagram-worthy treats that taste even better!"
+						},
+						{ 
+							name: "The Dusty Knuckle Bakery", 
+							lat: 51.5470859, 
+							lng: -0.074094, 
+							number: 6,
+							googleMapsLink: "https://maps.app.goo.gl/N3VvRxKkjc4N2Jp5A",
+							recommendation: "Social enterprise bakery with incredible sourdough and community spirit - every bite supports a great cause!"
+						},
+						{ 
+							name: "Toconoco", 
+							lat: 51.5383498, 
+							lng: -0.0783027, 
+							number: 7,
+							googleMapsLink: "https://maps.app.goo.gl/Bh9pppQov4vLCf9h6",
+							recommendation: "Artisanal bean-to-bar chocolate makers with heavenly pastries - a sweet paradise for chocolate lovers!"
+						}
+						// More locations will be added here as you provide them
 					];
 
 					function createSVGMarker(number) {
@@ -928,7 +996,7 @@
 							console.log(`${bakery.name} scaled to ${(currentScale * 100).toFixed(0)}%`);
 							
 							// Show bakery popup
-							showBakeryPopup(bakery.name);
+							showBakeryPopup(bakery);
 							
 							// Set timer to reset size after 1 second of no interaction
 							resetTimer = setTimeout(resetMarkerSize, 1000);
