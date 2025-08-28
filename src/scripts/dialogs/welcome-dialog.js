@@ -4,7 +4,7 @@
 
 import { showDialog, hideDialog } from './dialog-manager.js';
 import { setScrollingDisabled } from '../utils/dom-helpers.js';
-import { showRecommendationsPopup } from './recommendations-dialog.js';
+import { showRecommendationsPopup, showRecommendationsButton } from './recommendations-dialog.js';
 
 /**
  * Initialize welcome dialog functionality
@@ -19,6 +19,7 @@ export function initializeWelcomeDialog() {
     startBtn.addEventListener('click', () => {
       hideDialog('welcome-dialog');
       setScrollingDisabled(false);
+      showRecommendationsButton(); // Show floating button when starting journey
     });
   }
 
@@ -36,6 +37,7 @@ export function initializeWelcomeDialog() {
     closeBtn.addEventListener('click', () => {
       hideDialog('welcome-dialog');
       setScrollingDisabled(false);
+      showRecommendationsButton(); // Show floating button when closing welcome dialog
     });
   }
 }
