@@ -533,6 +533,35 @@
 				line-height: 1.4;
 				color: #000000;
 			}
+
+			/* Floating recommendations button */
+			.floating-recommendations-btn {
+				position: fixed;
+				bottom: 52px; /* Moved lower to avoid covering Leaflet attribution */
+				left: 8px; /* Slightly closer to edge */
+				z-index: 9998; /* Just below custom attribution */
+				background: #c0c0c0; /* Windows NT4 grey background */
+				color: #000000;
+				font-family: 'MS Sans Serif', sans-serif;
+				font-size: 9px; /* Smaller font */
+				border: 1px solid #808080;
+				padding: 4px 8px; /* Smaller padding */
+				cursor: pointer;
+				pointer-events: auto;
+				white-space: nowrap;
+				display: inline-block;
+				min-width: 140px; /* Smaller minimum width */
+				text-align: center;
+				transition: background-color 0.1s ease;
+			}
+
+			.floating-recommendations-btn:hover {
+				background: #d0d0d0;
+			}
+
+			.floating-recommendations-btn:active {
+				background: #a0a0a0;
+			}
 		</style>
 	</head>
 	<body>
@@ -648,6 +677,11 @@
 			<!-- Custom attribution overlay -->
 			<div id="custom-attribution">
 				<a href="https://leafletjs.com" target="_blank">Leaflet</a> | © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors
+			</div>
+			
+			<!-- Floating recommendations button -->
+			<div id="recommendations-button" class="floating-recommendations-btn" style="display: none;" data-show-recommendations>
+				🥐 View All Recommendations
 			</div>
 		</div>
 
