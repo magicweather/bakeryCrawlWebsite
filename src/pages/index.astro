@@ -254,15 +254,16 @@
 			}
 
 			.dialog-title-bar {
-				background: #000080;
+				background: #3b4dcb;
 				color: white;
-				height: 20px;
+				height: 32px;
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
-				padding: 2px 4px;
-				font-size: 11px;
+				padding: 8px 16px;
+				font-size: 14px;
 				font-weight: bold;
+				font-family: 'MS Sans Serif', sans-serif;
 			}
 
 			.dialog-controls {
@@ -474,52 +475,67 @@
 			}
 
 			.recommendations-content {
-				padding: 12px 16px 8px 16px;
+				padding: 16px 20px 12px 20px;
+				background: #e8e8e8;
+				border-bottom: 2px solid #cccccc;
 			}
 
 			.recommendations-list {
 				flex: 1;
 				overflow-y: auto;
-				padding: 0 16px;
-				max-height: 50vh;
-				background: #c0c0c0;
-				border-top: 1px solid #808080;
-				border-bottom: 1px solid #ffffff;
+				padding: 0;
+				max-height: 60vh;
+				background: #e8e8e8;
 			}
 
-			.recommendation-item {
-				display: flex;
-				align-items: flex-start;
-				gap: 12px;
-				padding: 12px 0;
-				border-bottom: 1px solid #808080;
-				font-family: 'MS Sans Serif', sans-serif;
+			:global(.recommendation-item) {
+				display: flex !important;
+				align-items: center !important;
+				gap: 16px !important;
+				padding: 16px 20px !important;
+				border-bottom: 1px solid #cccccc !important;
+				font-family: 'MS Sans Serif', sans-serif !important;
+				background: #e8e8e8 !important;
 			}
 
 			.recommendation-item:last-child {
 				border-bottom: none;
 			}
 
+			div.bakery-number,
+			div.recommendation-item div.bakery-number,
+			.recommendations-list div.bakery-number,
+			#recommendations-popup .recommendations-list .recommendation-item .bakery-number,
+			#recommendations-popup .fullscreen-dialog .recommendations-dialog .recommendations-list .recommendation-item .bakery-number,
+			.fullscreen-dialog-overlay .fullscreen-dialog .recommendations-list .recommendation-item .bakery-number,
+			.recommendations-list .recommendation-item .bakery-number,
+			.recommendation-item .bakery-number,
 			.bakery-number {
-				width: 32px;
-				height: 32px;
-				background: #0ea5e9;
-				color: white;
-				border-radius: 50%;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				font-weight: bold;
-				font-size: 14px;
-				flex-shrink: 0;
-				margin-top: 4px;
+				width: 36px !important;
+				height: 36px !important;
+				background: #4a9eff !important;
+				color: white !important;
+				border-radius: 50% !important;
+				display: flex !important;
+				align-items: center !important;
+				justify-content: center !important;
+				font-weight: bold !important;
+				font-size: 16px !important;
+				flex-shrink: 0 !important;
+				margin: 0 !important;
+				min-width: 36px !important;
+				max-width: 36px !important;
+				text-align: center !important;
+				line-height: 1 !important;
+				font-family: 'MS Sans Serif', sans-serif !important;
+				box-sizing: border-box !important;
 			}
 
-			.bakery-details {
+			:global(.bakery-details) {
 				flex: 1;
 			}
 
-			.bakery-details h4 {
+			:global(.bakery-details h4) {
 				margin: 0 0 6px 0;
 				font-size: 13px;
 				font-weight: bold;
@@ -527,7 +543,7 @@
 				line-height: 1.2;
 			}
 
-			.bakery-details p {
+			:global(.bakery-details p) {
 				margin: 0;
 				font-size: 11px;
 				line-height: 1.4;
@@ -561,6 +577,25 @@
 
 			.floating-recommendations-btn:active {
 				background: #a0a0a0;
+			}
+			/* FINAL OVERRIDE - Blue circular badges for recommendations */
+			:global(.bakery-number) {
+				width: 36px !important;
+				height: 36px !important;
+				background: #4a9eff !important;
+				color: white !important;
+				border-radius: 50% !important;
+				display: flex !important;
+				align-items: center !important;
+				justify-content: center !important;
+				font-weight: bold !important;
+				font-size: 16px !important;
+				flex-shrink: 0 !important;
+				margin: 0 !important;
+				text-align: center !important;
+				line-height: 1 !important;
+				font-family: 'MS Sans Serif', sans-serif !important;
+				box-sizing: border-box !important;
 			}
 		</style>
 	</head>
