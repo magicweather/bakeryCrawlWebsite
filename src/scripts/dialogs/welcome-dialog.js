@@ -5,7 +5,6 @@
 import { showDialog, hideDialog } from './dialog-manager.js';
 import { setScrollingDisabled } from '../utils/dom-helpers.js';
 import { showRecommendationsPopup, showRecommendationsButton } from './recommendations-dialog.js';
-import { showStartingBakeryPopup } from './starting-bakery-popup.js';
 
 /**
  * Initialize welcome dialog functionality
@@ -13,7 +12,6 @@ import { showStartingBakeryPopup } from './starting-bakery-popup.js';
 export function initializeWelcomeDialog() {
   const startBtn = document.getElementById('start-journey-btn');
   const recommendationsBtn = document.getElementById('move-recommendations-btn');
-  const startingBakeryBtn = document.getElementById('starting-bakery-btn');
   const closeBtn = document.querySelector('.welcome-close-btn');
 
   // Start journey button
@@ -31,15 +29,6 @@ export function initializeWelcomeDialog() {
       hideDialog('welcome-dialog');
       // Show recommendations popup instead of external redirect
       showRecommendationsPopup();
-    });
-  }
-
-  // Starting bakery deets button
-  if (startingBakeryBtn) {
-    startingBakeryBtn.addEventListener('click', () => {
-      hideDialog('welcome-dialog');
-      // Show the special starting bakery popup
-      showStartingBakeryPopup();
     });
   }
 

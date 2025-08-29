@@ -597,60 +597,6 @@
 				font-family: 'MS Sans Serif', sans-serif !important;
 				box-sizing: border-box !important;
 			}
-
-			/* Starting Bakery Dialog Styles */
-			.starting-bakery-dialog {
-				width: 90vw;
-				max-width: 500px;
-			}
-
-			.starting-bakery-content {
-				flex-direction: column;
-				padding: 16px;
-				align-items: center;
-			}
-
-			.bakery-image {
-				width: 100%;
-				max-width: 300px;
-				margin-bottom: 16px;
-				border: 2px solid #808080;
-				border-top-color: #ffffff;
-				border-left-color: #ffffff;
-				border-right-color: #404040;
-				border-bottom-color: #404040;
-			}
-
-			.bakery-image img {
-				width: 100%;
-				height: auto;
-				display: block;
-				max-height: 200px;
-				object-fit: cover;
-			}
-
-			.starting-bakery-content .dialog-text {
-				text-align: center;
-				margin-top: 0;
-			}
-
-			.starting-bakery-content .dialog-text h3 {
-				color: #000000;
-				font-size: 14px;
-				font-weight: bold;
-				margin-bottom: 8px;
-			}
-
-			.starting-bakery-content .dialog-text p {
-				color: #000000;
-				font-size: 11px;
-				line-height: 1.4;
-				margin: 6px 0;
-			}
-
-			.starting-bakery-content .google-maps-link {
-				margin-top: 12px;
-			}
 		</style>
 	</head>
 	<body>
@@ -705,7 +651,6 @@
 				<div class="dialog-buttons-vertical">
 					<button id="start-journey-btn" class="dialog-btn primary full-width">Start Journey, Scroll Around 😊</button>
 					<button id="move-recommendations-btn" class="dialog-btn full-width">Move to Recommendations</button>
-					<button id="starting-bakery-btn" class="dialog-btn full-width">Starting Bakery Details</button>
 				</div>
 			</div>
 		</div>
@@ -791,29 +736,6 @@
 						<p id="bakery-recommendation">Our recommendation will appear here...</p>
 						<div class="google-maps-link">
 							<a id="bakery-maps-link" href="#" target="_blank" style="color: #0000FF; text-decoration: underline;">📍 View on Google Maps</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- Starting Bakery Popup -->
-		<div id="starting-bakery-popup" class="fullscreen-dialog-overlay">
-			<div class="fullscreen-dialog starting-bakery-dialog">
-				<div class="dialog-title-bar">
-					<span>🏁 Starting Point - FORNO</span>
-					<div class="dialog-controls">
-						<div class="dialog-button" data-close-starting-bakery>×</div>
-					</div>
-				</div>
-				<div class="dialog-content starting-bakery-content">
-					<div class="bakery-image">
-						<img src="/forno_starting_point.png" alt="FORNO Bakery" id="forno-image">
-					</div>
-					<div class="dialog-text">
-						<h3>Welcome to your Bakery Crawl starting point!</h3>
-						<div class="google-maps-link">
-							<a href="https://maps.app.goo.gl/JoYPajGDfoS99fMA9" target="_blank" style="color: #0000FF; text-decoration: underline;">📍 Get Directions to Starting Point</a>
 						</div>
 					</div>
 				</div>

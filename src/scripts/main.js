@@ -7,7 +7,6 @@ import { initializeFullscreenDialog } from './dialogs/fullscreen-dialog.js';
 import { initializeWelcomeDialog } from './dialogs/welcome-dialog.js';
 import { initializeBakeryPopup } from './dialogs/bakery-popup.js';
 import { initializeRecommendationsDialog } from './dialogs/recommendations-dialog.js';
-import { initializeStartingBakeryPopup } from './dialogs/starting-bakery-popup.js';
 import { initializeMap } from './map/map-manager.js';
 
 /**
@@ -25,7 +24,6 @@ async function initializeApp() {
       initializeWelcomeDialog();
       initializeBakeryPopup();
       initializeRecommendationsDialog();
-      initializeStartingBakeryPopup();
       
       // Initialize the map and all its functionality
       await initializeMap();
