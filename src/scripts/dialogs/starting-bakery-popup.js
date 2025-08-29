@@ -3,6 +3,7 @@
  */
 
 import { showDialog, hideDialog } from './dialog-manager.js';
+import { setScrollingDisabled } from '../utils/dom-helpers.js';
 
 /**
  * Show starting bakery information popup
@@ -16,6 +17,7 @@ export function showStartingBakeryPopup() {
  */
 export function hideStartingBakeryPopup() {
   hideDialog('starting-bakery-popup');
+  setScrollingDisabled(false); // Re-enable scrolling when popup is closed
 }
 
 /**
