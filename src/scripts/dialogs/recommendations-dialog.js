@@ -65,6 +65,8 @@ function populateRecommendationsList() {
  * Show the recommendations dialog
  */
 export function showRecommendationsPopup() {
+  // Ensure recommendations are up to date every time popup opens
+  populateRecommendationsList();
   setScrollingDisabled(true);
   showDialog('recommendations-popup');
 }
