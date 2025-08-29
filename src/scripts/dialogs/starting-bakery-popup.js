@@ -4,6 +4,7 @@
 
 import { showDialog, hideDialog } from './dialog-manager.js';
 import { setScrollingDisabled } from '../utils/dom-helpers.js';
+import { showRecommendationsButton } from './recommendations-dialog.js';
 
 /**
  * Show starting bakery information popup
@@ -18,6 +19,7 @@ export function showStartingBakeryPopup() {
 export function hideStartingBakeryPopup() {
   hideDialog('starting-bakery-popup');
   setScrollingDisabled(false); // Re-enable scrolling when popup is closed
+  showRecommendationsButton(); // Show floating recommendations button when popup is closed
 }
 
 /**

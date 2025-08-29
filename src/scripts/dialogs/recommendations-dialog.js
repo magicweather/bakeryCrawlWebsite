@@ -77,6 +77,7 @@ export function showRecommendationsPopup() {
 export function hideRecommendationsPopup() {
   hideDialog('recommendations-popup');
   setScrollingDisabled(false);
+  showRecommendationsButton(); // Show floating button when popup closes
 }
 
 /**
